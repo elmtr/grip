@@ -3,8 +3,8 @@ package grip
 import (
 	"time"
 
+	sj "github.com/brianvoe/sjwt"
 	"github.com/deta/deta-go/service/base"
-	"github.com/dgrijalva/jwt-go"
 )
 
 type Student struct {
@@ -12,7 +12,7 @@ type Student struct {
   LastName  string         `json:"lastName"`
   FirstName string         `json:"firstName"`
   Phone     string         `json:"phone"`
-  Grade  Grade          `json:"homeroom"`
+  Grade  Grade             `json:"grade"`
   Subjects  []ShortSubject `json:"subjects"`
   Password  string         `json:"password"`
   Passcode  string         `json:"passcode"`
@@ -23,34 +23,35 @@ type ShortSubject struct {
 	Name string `json:"name"`
 }
 
-type StudentClaims struct {
-  Key       string         `json:"key"`
-  LastName  string         `json:"lastName"`
-  FirstName string         `json:"firstName"`
-  Phone     string         `json:"phone"`
-  Grade  Grade          `json:"homeroom"`
-  Subjects  []ShortSubject `json:"subjects"`
-  
-  jwt.StandardClaims
-}
-
-func GenStudentToken(student Student) (tokenString string,err error) {
-  expirationTime := time.Now().Add(8760 * time.Hour)
-
-  claims := &StudentClaims {
+func GenStudentToken(student Student) (string)  {
+  info := &Student {
     Key: student.Key,
     FirstName: student.FirstName,
     LastName: student.LastName,
     Phone: student.Phone,
     Grade: student.Grade,
     Subjects: student.Subjects,
-    StandardClaims: jwt.StandardClaims {
-      ExpiresAt: expirationTime.Unix(),
-    },
+  }
+  claims, _ := sj.ToClaims(info)
+  claims.SetExpiresAt(time.Now().Add(8760 * time.Hour))
+
+  token := claims.Generate(JWTKey)
+  return token
+}
+
+func ParseStudentToken(token string) (Student, error) {
+  hasVerified := sj.Verify(token, JWTKey)
+
+  if !hasVerified {
+    return Student {}, nil
   }
 
-  token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-  return token.SignedString(JWTKey)
+  claims, _ := sj.Parse(token)
+  err := claims.Validate()
+  student := Student {}
+  claims.ToStruct(&student)
+
+  return student, err
 }
 
 func (student *Student) Put() (error) {

@@ -3,8 +3,8 @@ package grip
 import (
 	"time"
 
+	sj "github.com/brianvoe/sjwt"
 	"github.com/deta/deta-go/service/base"
-	"github.com/dgrijalva/jwt-go"
 )
 
 type Parent struct {
@@ -23,32 +23,34 @@ type ParentStudent struct {
   LastName  string `json:"lastName"`
 }
 
-type ParentClaims struct {
-  Key       string          `json:"key"`
-  LastName  string          `json:"lastName"`
-  FirstName string          `json:"firstName"`
-  Phone     string          `json:"phone"`
-  Students  []ParentStudent `json:"students"`
-
-  jwt.StandardClaims
-}
-
-func GenParentToken(parent Parent) (string, error) {
-  expirationTime := time.Now().Add(8760 * time.Hour)
-
-  claims := &ParentClaims {
+func GenParentToken(parent Parent) (string) {
+  info := &Parent {
     Key: parent.Key,
     FirstName: parent.FirstName,
     LastName: parent.LastName,
     Phone: parent.Phone,
     Students: parent.Students,
-    StandardClaims: jwt.StandardClaims {
-      ExpiresAt: expirationTime.Unix(),
-    },
+  }
+  claims, _ := sj.ToClaims(info)
+  claims.SetExpiresAt(time.Now().Add(8760 * time.Hour))
+
+  token := claims.Generate(JWTKey)
+  return token
+}
+
+func ParseParentToken(token string) (Parent, error) {
+  hasVerified := sj.Verify(token, JWTKey)
+
+  if !hasVerified {
+    return Parent {}, nil
   }
 
-  token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-  return token.SignedString(JWTKey)
+  claims, _ := sj.Parse(token)
+  err := claims.Validate()
+  parent := Parent {}
+  claims.ToStruct(&parent)
+
+  return parent, err
 }
 
 func (parent *Parent) Put() (error) {

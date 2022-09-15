@@ -3,8 +3,8 @@ package grip
 import (
 	"time"
 
+	sj "github.com/brianvoe/sjwt"
 	"github.com/deta/deta-go/service/base"
-	"github.com/dgrijalva/jwt-go"
 )
 
 type Teacher struct {
@@ -18,34 +18,35 @@ type Teacher struct {
   Passcode  string    `json:"passcode"`
 }
 
-type TeacherClaims struct {
-  Key       string    `json:"key"`
-  LastName  string    `json:"lastName"`
-  FirstName string    `json:"firstName"`
-  Phone     string    `json:"phone"`
-  Homeroom  Grade     `json:"homeroom"`
-  Subjects  []Subject `json:"subjects"`
-  
-  jwt.StandardClaims
-}
-
-func GenTeacherToken(teacher Teacher) (string, error) {
-  expirationTime := time.Now().Add(8760 * time.Hour)
-
-  claims := &TeacherClaims {
+func GenTeacherToken(teacher Teacher) (string) {
+  info := &Teacher {
     Key: teacher.Key,
     FirstName: teacher.FirstName,
     LastName: teacher.LastName,
     Phone: teacher.Phone,
     Homeroom: teacher.Homeroom,
     Subjects: teacher.Subjects,
-    StandardClaims: jwt.StandardClaims {
-      ExpiresAt: expirationTime.Unix(),
-    },
+  }
+  claims, _ := sj.ToClaims(info)
+  claims.SetExpiresAt(time.Now().Add(8760 * time.Hour))
+
+  token := claims.Generate(JWTKey)
+  return token
+}
+
+func ParseTeacherToken(token string) (Teacher, error) {
+  hasVerified := sj.Verify(token, JWTKey)
+
+  if !hasVerified {
+    return Teacher {}, nil
   }
 
-  token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-  return token.SignedString(JWTKey)
+  claims, _ := sj.Parse(token)
+  err := claims.Validate()
+  teacher := Teacher {}
+  claims.ToStruct(&teacher)
+
+  return teacher, err
 }
 
 func (teacher *Teacher) Put() (error) {

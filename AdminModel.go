@@ -3,8 +3,8 @@ package grip
 import (
 	"time"
 
+	sj "github.com/brianvoe/sjwt"
 	"github.com/deta/deta-go/service/base"
-	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -14,28 +14,32 @@ type Admin struct {
   Password string `json:"password"`
 }
 
-type AdminClaims struct {
-  Key string `json:"key"`
-  Email string `json:"email"`
-  Password string `json:"password"`
-
-  jwt.StandardClaims
-}
-
-func GenAdminToken(admin Admin) (string, error) {
-  expirationTime := time.Now().Add(8760 * time.Hour)
-
-  claims := &AdminClaims {
+func GenAdminToken(admin Admin) (string) {
+  info := &Admin {
     Key: admin.Key,
     Email: admin.Email,
-    StandardClaims: jwt.StandardClaims {
-      ExpiresAt: expirationTime.Unix(),
-    },
+  }
+  claims, _ := sj.ToClaims(info)
+  claims.SetExpiresAt(time.Now().Add(8760 * time.Hour))
+
+  token := claims.Generate(JWTKey)
+  return token
+} 
+
+func ParseAdminToken(token string) (Admin, error) {
+  hasVerified := sj.Verify(token, JWTKey)
+
+  if !hasVerified {
+    return Admin {}, nil
   }
 
-  token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-  return token.SignedString(JWTKey)
-} 
+  claims, _ := sj.Parse(token)
+  err := claims.Validate()
+  admin := Admin {}
+  claims.ToStruct(&admin)
+
+  return admin, err
+}
 
 func GetAdmin(email string) (Admin, error) {
   var admins []Admin
