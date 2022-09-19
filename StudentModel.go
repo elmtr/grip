@@ -13,15 +13,15 @@ type Student struct {
   FirstName string         `json:"firstName"`
   Phone     string         `json:"phone"`
   Grade  Grade             `json:"grade"`
-  Subjects  []ShortSubject `json:"subjects"`
+  // Subjects  []ShortSubject `json:"subjects"`
   Password  string         `json:"password"`
   Passcode  string         `json:"passcode"`
 }
 
-type ShortSubject struct {
-  Key  string `json:"key"`
-	Name string `json:"name"`
-}
+// type ShortSubject struct {
+//   Key  string `json:"key"`
+// 	Name string `json:"name"`
+// }
 
 func GenStudentToken(student Student) (string)  {
   info := &Student {
@@ -30,7 +30,7 @@ func GenStudentToken(student Student) (string)  {
     LastName: student.LastName,
     Phone: student.Phone,
     Grade: student.Grade,
-    Subjects: student.Subjects,
+    // Subjects: student.Subjects,
   }
   claims, _ := sj.ToClaims(info)
   claims.SetExpiresAt(time.Now().Add(8760 * time.Hour))
@@ -57,7 +57,7 @@ func ParseStudentToken(token string) (Student, error) {
 func (student *Student) Put() (error) {
   student.Key = GenKey()
   student.Grade = Grade {}
-  student.Subjects = []ShortSubject {}
+  // student.Subjects = []ShortSubject {}
   
   _, err := Students.Put(student)
   return err
@@ -87,30 +87,30 @@ func GetStudents(query base.Query) ([]Student, error) {
   return students, err
 }
 
-func AddStudentSubject(key string, subjects []ShortSubject, subject ShortSubject) ([]ShortSubject, error) {
-  subjects = append(subjects, subject)
+// func AddStudentSubject(key string, subjects []ShortSubject, subject ShortSubject) ([]ShortSubject, error) {
+//   subjects = append(subjects, subject)
 
-  err := Teachers.Update(key, base.Updates {
-    "subjects": subjects,
-  })
+//   err := Teachers.Update(key, base.Updates {
+//     "subjects": subjects,
+//   })
 
-  return subjects, err
-}
+//   return subjects, err
+// }
 
-func RemoveStudentSubject(key string, subjects []ShortSubject, oldSubject ShortSubject) ([]ShortSubject, error) {
-  var newSubjects []ShortSubject 
-  for _, subject := range subjects {
-    if (subject.Key != oldSubject.Key) {
-      newSubjects = append(newSubjects, subject)
-    }
-  }
+// func RemoveStudentSubject(key string, subjects []ShortSubject, oldSubject ShortSubject) ([]ShortSubject, error) {
+//   var newSubjects []ShortSubject 
+//   for _, subject := range subjects {
+//     if (subject.Key != oldSubject.Key) {
+//       newSubjects = append(newSubjects, subject)
+//     }
+//   }
 
-  err := Students.Update(key, base.Updates {
-    "subjects": newSubjects,
-  })
+//   err := Students.Update(key, base.Updates {
+//     "subjects": newSubjects,
+//   })
 
-  return newSubjects, err
-}
+//   return newSubjects, err
+// }
 
 func UpdateStudentGrade(key string, grade Grade) (Student, error) {
   var student Student 
@@ -136,35 +136,35 @@ func StudentSetup(key string, grade Grade) (Student, error) {
     return Student {}, err
   }
   
-  // getting the subjects
-  subjects, err := GetSubjects(
-    base.Query {
-      {"grade.gradeLetter": grade.GradeLetter},
-      {"grade.gradeNumber": grade.GradeNumber},
-    },
-  )
-  if err != nil {
-    return Student {}, err
-  }
+  // // getting the subjects
+  // subjects, err := GetSubjects(
+  //   base.Query {
+  //     {"grade.gradeLetter": grade.GradeLetter},
+  //     {"grade.gradeNumber": grade.GradeNumber},
+  //   },
+  // )
+  // if err != nil {
+  //   return Student {}, err
+  // }
 
-  // transforming subjects to short subjects
-  var shortSubjects []ShortSubject
-  for _, subject := range subjects {
-    shortSubjects = append(
-      shortSubjects,
-      ShortSubject {
-        Key: subject.Key,
-        Name: subject.Name,
-      },
-    )
-  }
+  // // transforming subjects to short subjects
+  // var shortSubjects []ShortSubject
+  // for _, subject := range subjects {
+  //   shortSubjects = append(
+  //     shortSubjects,
+  //     ShortSubject {
+  //       Key: subject.Key,
+  //       Name: subject.Name,
+  //     },
+  //   )
+  // }
 
   var student Student
 
   // updating the student
   err = Students.Update(key, base.Updates {
     "grade": grade,
-    "subjects": shortSubjects,
+    // "subjects": shortSubjects,
   },)
   if err != nil {
     return Student {}, err

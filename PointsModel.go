@@ -19,7 +19,7 @@ func (points *Points) Put() (error) {
 }
 
 func GetPoints(query base.Query) (Points, error) {
-  var points Points
+  var points []Points
 
   _, err := PointsBase.Fetch(&base.FetchInput {
     Q: query,
@@ -27,24 +27,22 @@ func GetPoints(query base.Query) (Points, error) {
     Limit: 1,
   })
 
-  return points, err
+  return points[0], err
 }
 
-func ModifyPoints(key string, amount int) (Points, error) {
-  var points Points
+func ModifyPoints(key string, amount int) (error) {
 
   err := PointsBase.Update(key, base.Updates {
     "value": PointsBase.Util.Increment(amount),
   })
 
-  points.Value += amount
-  return points, err
+  return err
 }
 
-func IncreasePoints(key string) (Points, error) {
+func IncreasePoints(key string) (error) {
   return ModifyPoints(key, 1)
 }
 
-func DecreasePoints(key string) (Points, error) {
+func DecreasePoints(key string) (error) {
   return ModifyPoints(key, -1)
 }
