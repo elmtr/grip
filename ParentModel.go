@@ -76,7 +76,7 @@ func GetParent(query base.Query) (Parent, error) {
 func AddParentStudent(key string, students []ParentStudent, student ParentStudent) ([]ParentStudent, error) {
   students = append(students, student)
 
-  err := Teachers.Update(key, base.Updates {
+  err := Parents.Update(key, base.Updates {
     "students": students,
   })
 
@@ -84,7 +84,7 @@ func AddParentStudent(key string, students []ParentStudent, student ParentStuden
 }
 
 func UpdateParent(key string, updates base.Updates) (error) {
-  err := Teachers.Update(key, updates)
+  err := Parents.Update(key, updates)
 
   return err
 }

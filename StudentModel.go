@@ -90,7 +90,7 @@ func GetStudents(query base.Query) ([]Student, error) {
 // func AddStudentSubject(key string, subjects []ShortSubject, subject ShortSubject) ([]ShortSubject, error) {
 //   subjects = append(subjects, subject)
 
-//   err := Teachers.Update(key, base.Updates {
+//   err := Students.Update(key, base.Updates {
 //     "subjects": subjects,
 //   })
 
