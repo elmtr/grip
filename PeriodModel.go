@@ -5,7 +5,7 @@ import (
 )
 
 type Period struct {
-  Key        string `json:"Key"`
+  Key        string `json:"key"`
 
   Day       int    `json:"day"`
   Interval  int    `json:"interval"`
@@ -35,7 +35,11 @@ func GetPeriod(query base.Query) (Period, error) {
     Limit: 1,
   })
 
-  return periods[0], err
+  if len(periods) > 0 {
+    return periods[0], err 
+  } else {
+    return Period {}, err
+  }
 }
 
 func GetPeriods(query base.Query) ([]Period, error) {
@@ -44,7 +48,6 @@ func GetPeriods(query base.Query) ([]Period, error) {
   _, err := Periods.Fetch(&base.FetchInput {
     Q: query,
     Dest: &periods,
-    Limit: 1,
   })
 
   return periods, err

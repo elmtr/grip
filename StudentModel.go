@@ -112,16 +112,13 @@ func GetStudents(query base.Query) ([]Student, error) {
 //   return newSubjects, err
 // }
 
-func UpdateStudentGrade(key string, grade Grade) (Student, error) {
-  var student Student 
+func UpdateStudentGrade(key string, grade Grade) (error) {
 
   err := Students.Update(key, base.Updates {
     "grade": grade,
   })
 
-  student.Grade = grade
-
-  return student, err
+  return err
 }
 
 func StudentSetup(key string, grade Grade) (Student, error) {

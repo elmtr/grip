@@ -5,7 +5,13 @@ import "github.com/deta/deta-go/service/base"
 type School struct {
 	Key       string   `json:"key"`
 	Name      string   `json:"name"`
-	Intervals []string `json:"intervals"`
+	Intervals []Interval `json:"intervals"`
+}
+
+type Interval struct {
+	Number int		 `json:"number"`
+	Start  float32 `json:"start"`
+	End 	 float32 `json:"end"`
 }
 
 func (school *School) Put() (error) {

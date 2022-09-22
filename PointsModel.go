@@ -27,7 +27,11 @@ func GetPoints(query base.Query) (Points, error) {
     Limit: 1,
   })
 
-  return points[0], err
+  if len(points) > 0 {
+    return points[0], err 
+  } else {
+    return Points {}, err
+  }
 }
 
 func ModifyPoints(key string, amount int) (error) {
