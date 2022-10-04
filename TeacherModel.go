@@ -16,6 +16,7 @@ type Teacher struct {
   Subjects  []Subject `json:"subjects"`
   Password  string    `json:"password"`
   Passcode  string    `json:"passcode"`
+  SchoolKey string    `json:"schoolKey"`
 }
 
 func GenTeacherToken(teacher Teacher) (string) {
@@ -26,6 +27,7 @@ func GenTeacherToken(teacher Teacher) (string) {
     Phone: teacher.Phone,
     Homeroom: teacher.Homeroom,
     Subjects: teacher.Subjects,
+    SchoolKey: teacher.SchoolKey,
   }
   claims, _ := sj.ToClaims(info)
   claims.SetExpiresAt(time.Now().Add(8760 * time.Hour))

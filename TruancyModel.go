@@ -20,15 +20,15 @@ func (truancy *Truancy) Put() (error) {
 	return err
 }
 
-func GetTruancies(query base.Query) ([]Mark, error) {
-	var marks []Mark
+func GetTruancies(query base.Query) ([]Truancy, error) {
+	var truancies []Truancy
 
-	_, err := Marks.Fetch(&base.FetchInput{
+	_, err := Truancies.Fetch(&base.FetchInput{
 		Q: query,
-		Dest: &marks,
+		Dest: &truancies,
 	})
 
-	return marks, err
+	return truancies, err
 }
 
 func MotivateTruancy(key string) (error) {
