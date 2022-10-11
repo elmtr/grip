@@ -4,7 +4,7 @@ import "github.com/deta/deta-go/service/base"
 
 type AverageMark struct {
 	Key        string `json:"key,omitempty"`
-	Value     int    `json:"value,omitempty"`
+	Value      int    `json:"value,omitempty"`
 	SubjectKey string `json:"subjectKey,omitempty"`
 	StudentKey string `json:"studentKey,omitempty"`
 }

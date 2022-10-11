@@ -6,7 +6,7 @@ import (
 
 type Points struct {
   Key        string `json:"key"`
-	Value     int    `json:"value"`
+	Value      int    `json:"value"`
 	SubjectKey string `json:"subjectKey"`
 	StudentKey string `json:"studentKey"`
 }

@@ -9,8 +9,8 @@ import (
 )
 
 type Admin struct {
-  Key string `json:"key"`
-  Email string `json:"email"`
+  Key      string `json:"key"`
+  Email    string `json:"email"`
   Password string `json:"password"`
 }
 

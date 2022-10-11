@@ -6,9 +6,9 @@ import (
 
 type Truancy struct {
 	Key        string `json:"key"`
-	Motivated bool   `json:"motivated"`
-	DateDay   string `json:"dateDay"`
-	DateMonth string `json:"dateMonth"`
+	Motivated  bool   `json:"motivated"`
+	DateDay    int `json:"dateDay"`
+	DateMonth  int `json:"dateMonth"`
 	SubjectKey string `json:"subjectKey"`
 	StudentKey string `json:"studentKey"`
 }

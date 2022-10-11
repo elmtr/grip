@@ -7,7 +7,6 @@ import (
 
 var Encoding string = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-"
 
-
 func GenKey() string {
   rand.Seed(time.Now().UnixNano())
   var ID string

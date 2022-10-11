@@ -12,7 +12,7 @@ type Student struct {
   LastName  string         `json:"lastName"`
   FirstName string         `json:"firstName"`
   Phone     string         `json:"phone"`
-  Grade  Grade             `json:"grade"`
+  Grade     Grade          `json:"grade"`
   // Subjects  []ShortSubject `json:"subjects"`
   Password  string         `json:"password"`
   Passcode  string         `json:"passcode"`

@@ -5,13 +5,14 @@ import (
 )
 
 type Period struct {
-  Key        string `json:"key"`
+  Key string `json:"key"`
 
   Day       int    `json:"day"`
   Interval  int    `json:"interval"`
 
   // modifiable
   Room      string `json:"room"`
+  
   // indexable
   Subject Subject   `json:"subject"`
 }

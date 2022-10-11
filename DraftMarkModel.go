@@ -6,9 +6,9 @@ import (
 
 type DraftMark struct {
   Key        string `json:"key"`
-	Value     int    `json:"value"`
-	DateDay   string `json:"dateDay"`
-	DateMonth string `json:"dateMonth"`
+	Value      int    `json:"value"`
+	DateDay    int 		`json:"dateDay"`
+	DateMonth  int 		`json:"dateMonth"`
 	SubjectKey string `json:"subjectKey"`
 	StudentKey string `json:"studentKey"`
 }
