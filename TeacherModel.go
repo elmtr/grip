@@ -72,6 +72,20 @@ func GetTeacher(query base.Query) (Teacher, error) {
   return teachers[0], err
 }
 
+func CheckTeacher(phone string) (bool) {
+  var teachers []Teacher
+
+  Teachers.Fetch(&base.FetchInput {
+    Q: base.Query {
+      {"phone": phone},
+    },
+    Dest: &teachers,
+    Limit: 1,
+  })
+
+  return len(teachers) > 0
+}
+
 func AddTeacherSubject(key string, subjects []Subject, subject Subject) ([]Subject, error) {
   subjects = append(subjects, subject)
 
