@@ -39,6 +39,20 @@ func GenStudentToken(student Student) (string)  {
   return token
 }
 
+func CheckStudent(phone string) (bool) {
+  var students []Student
+
+  Students.Fetch(&base.FetchInput {
+    Q: base.Query {
+      {"phone": phone},
+    },
+    Dest: &students,
+    Limit: 1,
+  })
+
+  return len(students) > 0
+}
+
 func ParseStudentToken(token string) (Student, error) {
   hasVerified := sj.Verify(token, JWTKey)
 

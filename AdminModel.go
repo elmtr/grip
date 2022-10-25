@@ -11,6 +11,7 @@ import (
 type Admin struct {
   Key      string `json:"key"`
   Email    string `json:"email"`
+  SchoolKey string `json:"schoolKey"`
   Password string `json:"password"`
 }
 
@@ -18,6 +19,7 @@ func GenAdminToken(admin Admin) (string) {
   info := &Admin {
     Key: admin.Key,
     Email: admin.Email,
+    SchoolKey: admin.SchoolKey,
   }
   claims, _ := sj.ToClaims(info)
   claims.SetExpiresAt(time.Now().Add(8760 * time.Hour))

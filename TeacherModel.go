@@ -55,6 +55,7 @@ func (teacher *Teacher) Put() (error) {
   teacher.Key = GenKey()
   teacher.Homeroom = Grade {}
   teacher.Subjects = []Subject {}
+  teacher.SchoolKey = SchoolKey
   
   _, err := Teachers.Put(teacher)
   return err

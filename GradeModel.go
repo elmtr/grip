@@ -40,7 +40,6 @@ func GetGrades(query base.Query) ([]Grade, error) {
 	_, err := Grades.Fetch(&base.FetchInput{
 		Q: query,
 		Dest: &grades,
-		Limit: 1,
 	})
 
 	return grades, err
