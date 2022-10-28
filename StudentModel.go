@@ -137,45 +137,21 @@ func UpdateStudentGrade(key string, grade Grade) (error) {
 
 func StudentSetup(key string, grade Grade) (Student, error) {
   // getting the grade
-  grade, err := GetGrade(
+  newGrade, err := GetGrade(
     base.Query {
-      {"gradeNumber": grade.GradeNumber},
-      {"gradeLetter": grade.GradeLetter},
+      {"gradeNumber": grade.GradeNumber,
+      "gradeLetter": grade.GradeLetter},
     },
   )
   if err != nil {
     return Student {}, err
   }
-  
-  // // getting the subjects
-  // subjects, err := GetSubjects(
-  //   base.Query {
-  //     {"grade.gradeLetter": grade.GradeLetter},
-  //     {"grade.gradeNumber": grade.GradeNumber},
-  //   },
-  // )
-  // if err != nil {
-  //   return Student {}, err
-  // }
-
-  // // transforming subjects to short subjects
-  // var shortSubjects []ShortSubject
-  // for _, subject := range subjects {
-  //   shortSubjects = append(
-  //     shortSubjects,
-  //     ShortSubject {
-  //       Key: subject.Key,
-  //       Name: subject.Name,
-  //     },
-  //   )
-  // }
 
   var student Student
 
   // updating the student
   err = Students.Update(key, base.Updates {
-    "grade": grade,
-    // "subjects": shortSubjects,
+    "grade": newGrade,
   },)
   if err != nil {
     return Student {}, err
@@ -183,6 +159,32 @@ func StudentSetup(key string, grade Grade) (Student, error) {
 
   // getting the student
   err = Students.Get(key, &student)
+  if err != nil {
+    return Student {}, err
+  }
+    
+  // getting the subjects
+  subjects, err := GetSubjects(
+    base.Query {
+      {"grade.gradeLetter": grade.GradeLetter},
+      {"grade.gradeNumber": grade.GradeNumber},
+    },
+  )
+  if err != nil {
+    return Student {}, err
+  }
+  
+  var points []Points
+  for subject := range subjects {
+    points = append(points, Points {
+      Key: GenKey(),
+      Value: 0,
+      SubjectKey: subjects[subject].Key,
+      StudentKey: student.Key,
+    })
+  }
+
+  PointsBase.PutMany(points)
 
   return student, err  
 }
