@@ -70,7 +70,12 @@ func GetTeacher(query base.Query) (Teacher, error) {
     Limit: 1,
   })
 
-  return teachers[0], err
+  if len(teachers) > 0 {
+    return teachers[0], err
+  } else {
+    return Teacher {}, err
+  }
+
 }
 
 func CheckTeacher(phone string) (bool) {

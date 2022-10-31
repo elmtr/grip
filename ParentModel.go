@@ -70,7 +70,12 @@ func GetParent(query base.Query) (Parent, error) {
     Limit: 1,
   })
 
-  return parents[0], err
+  if len(parents) > 0 {
+    return parents[0], err
+  } else {
+    return Parent {}, err
+  }
+
 }
 
 func AddParentStudent(key string, students []ParentStudent, student ParentStudent) ([]ParentStudent, error) {

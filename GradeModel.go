@@ -31,7 +31,12 @@ func GetGrade(query base.Query) (Grade, error) {
 		Limit: 1,
 	})
 
-	return grades[0], err
+	if len(grades) > 0 {
+		return grades[0], err
+	} else {
+		return Grade {}, err
+	}
+
 }
 
 func GetGrades(query base.Query) ([]Grade, error) {

@@ -86,7 +86,12 @@ func GetStudent(query base.Query) (Student, error) {
     Limit: 1,
   })
 
-  return students[0], err
+  if len(students) > 0 {
+    return students[0], err
+  } else {
+    return Student {}, err
+  }
+
 }
 
 func GetStudents(query base.Query) ([]Student, error) {
@@ -95,7 +100,6 @@ func GetStudents(query base.Query) ([]Student, error) {
   _, err := Students.Fetch(&base.FetchInput {
     Q: query,
     Dest: &students,
-    Limit: 1,
   })
 
   return students, err

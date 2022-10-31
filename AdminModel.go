@@ -54,7 +54,13 @@ func GetAdmin(email string) (Admin, error) {
     Limit: 1,
   })
 
-  return admins[0], err
+
+  if len(admins) > 0 {
+    return admins[0], err
+  } else {
+    return Admin {}, err
+  }
+
 }
 
 func (admin *Admin) Put() (error) {

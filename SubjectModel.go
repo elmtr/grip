@@ -25,7 +25,12 @@ func GetSubject(query base.Query) (Subject, error) {
 		Dest: &subjects,
 	})
 
-	return subjects[0], err
+	if len(subjects) > 0 {
+		return subjects[0], err
+	} else {
+		return Subject {}, err
+	}
+
 }
 
 func GetSubjects(query base.Query) ([]Subject, error) {
