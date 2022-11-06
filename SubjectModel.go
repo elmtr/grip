@@ -8,6 +8,7 @@ type Subject struct {
 	Key 	string `json:"key"`
 	Name  string `json:"name" `
 	Grade Grade  `json:"grade"`
+	Ord 	int		 `json:"ord"`	
 }
 
 func (subject *Subject) Put() (error) {
