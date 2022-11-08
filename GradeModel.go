@@ -11,7 +11,7 @@ type Grade struct {
 	YearTo      int    `json:"yearTo"`
 	GradeNumber int    `json:"gradeNumber"`
 	GradeLetter string `json:"gradeLetter"`
-	Intervals   string `json:"intervals"`
+	// Intervals   string `json:"intervals"`
 }
 
 
